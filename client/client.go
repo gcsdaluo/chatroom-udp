@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	MAX_BYTES = 65535
-	ADDRESS   = "127.0.0.1"
-	PORT      = 1600
+	MaxBytes = 65535
+	ADDRESS  = "127.0.0.1"
+	PORT     = 1600
 )
 
 func main() {
@@ -26,9 +26,9 @@ func main() {
 
 	var choice int
 	for {
-		fmt.Println("Please select:")
-		fmt.Println("1. Register")
-		fmt.Println("2. Login")
+		fmt.Println("请进行选择:")
+		fmt.Println("1. 注册")
+		fmt.Println("2. 登录")
 
 		_, err := fmt.Scanln(&choice)
 		if err != nil {
@@ -43,7 +43,7 @@ func main() {
 
 		signal, name, address := personMessage(conn, choice, reader)
 		if signal == "OK" {
-			fmt.Println("\t\t\t\tYou have successfully entered the room\t\t")
+			fmt.Println("\t\t\t\t欢迎进入聊天室\t\t")
 			chatMessage(conn, name, address, reader)
 			break
 		} else if signal == "Error_UserExist" {
@@ -57,24 +57,24 @@ func main() {
 }
 
 func personMessage(conn net.Conn, choice int, reader *bufio.Reader) (string, string, string) {
-	fmt.Print("Please input name: ")
+	fmt.Print("请输入名字: ")
 	name, _ := reader.ReadString('\n')
 	name = strings.TrimSpace(name)
 
-	fmt.Print("Please input password: ")
+	fmt.Print("请输入密码: ")
 	password, _ := reader.ReadString('\n')
 	password = strings.TrimSpace(password)
 
 	text := fmt.Sprintf("%d  %s  %s", choice, name, password)
 	conn.Write([]byte(text))
 
-	buffer := make([]byte, MAX_BYTES)
+	buffer := make([]byte, MaxBytes)
 	n, _ := conn.Read(buffer)
 	return string(buffer[:n]), name, fmt.Sprintf("%s:%d", ADDRESS, PORT)
 }
 
 func chatMessage(conn net.Conn, name, address string, reader *bufio.Reader) {
-	fmt.Println("Please enter the chat content:")
+	fmt.Println("请输入聊天信息:")
 	fmt.Println("(input \033[1;44mExit\033[0m to quit the room,")
 	fmt.Println("input \033[1;44ms/name/message\033[0m for private chat)")
 
@@ -87,7 +87,7 @@ func chatMessage(conn net.Conn, name, address string, reader *bufio.Reader) {
 		if message == "Exit" {
 			text := fmt.Sprintf("5  %s  %s", name, address)
 			conn.Write([]byte(text))
-			fmt.Println("You have exited the chat room")
+			fmt.Println("你已经退出聊天室")
 			os.Exit(0)
 		}
 
@@ -110,7 +110,7 @@ func chatMessage(conn net.Conn, name, address string, reader *bufio.Reader) {
 }
 
 func receiveMessages(conn net.Conn) {
-	buffer := make([]byte, MAX_BYTES)
+	buffer := make([]byte, MaxBytes)
 	for {
 		n, _ := conn.Read(buffer)
 		message := string(buffer[:n])
@@ -120,6 +120,6 @@ func receiveMessages(conn net.Conn) {
 			os.Exit(0)
 		}
 
-		fmt.Print("\t\t\t\t\t\t" + message + "\nPlease enter the chat content:\n")
+		fmt.Print("\t\t\t\t\t\t" + message + "\n请输入聊天信息:\n")
 	}
 }

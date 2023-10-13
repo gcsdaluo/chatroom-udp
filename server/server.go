@@ -3,72 +3,19 @@ package main
 import (
 	"fmt"
 	"net"
-	"strings"
 	"time"
 )
 
 const (
-	MAX_BYTES = 65535
-	ADDRESS   = "127.0.0.1"
-	PORT      = 1600
+	MaxBytes = 65535
+	ADDRESS  = "127.0.0.1"
+	PORT     = 1600
 )
 
 // User struct to store user information
 type User struct {
 	Password string
 	Address  *net.UDPAddr
-}
-
-func main() {
-	// Users' information stored in a map
-	users := make(map[string]User)
-
-	// Create UDP address
-	udpAddr, err := net.ResolveUDPAddr("udp", fmt.Sprintf("%s:%d", ADDRESS, PORT))
-	if err != nil {
-		fmt.Println("Error resolving UDP address:", err)
-		return
-	}
-
-	// Create UDP connection
-	conn, err := net.ListenUDP("udp", udpAddr)
-	if err != nil {
-		fmt.Println("Error listening:", err)
-		return
-	}
-	defer conn.Close()
-
-	fmt.Println("Listening on", conn.LocalAddr())
-
-	for {
-		buffer := make([]byte, MAX_BYTES)
-		n, addr, err := conn.ReadFromUDP(buffer)
-		if err != nil {
-			fmt.Println("Error reading from UDP connection:", err)
-			return
-		}
-
-		message := string(buffer[:n])
-		textList := strings.Split(message, "  ")
-
-		switch textList[0] {
-		case "1":
-			// Register
-			register(conn, users, textList, addr)
-		case "2":
-			// Login
-			login(conn, users, textList, addr)
-		case "3":
-			// Public chat
-			publicChat(conn, users, textList)
-		case "4":
-			// Private chat
-			privateChat(conn, users, textList)
-		case "5":
-			// Exit
-			exit(conn, users, textList)
-		}
-	}
 }
 
 func register(conn *net.UDPConn, users map[string]User, textList []string, addr *net.UDPAddr) {

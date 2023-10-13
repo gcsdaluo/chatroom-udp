@@ -30,11 +30,7 @@ func main() {
 		fmt.Println("1. 注册")
 		fmt.Println("2. 登录")
 
-		_, err := fmt.Scanln(&choice)
-		if err != nil {
-			fmt.Println("Error reading choice:", err)
-			continue
-		}
+		fmt.Scanln(&choice)
 
 		if choice != 1 && choice != 2 {
 			fmt.Println("Unknown command")
@@ -43,15 +39,15 @@ func main() {
 
 		signal, name, address := personMessage(conn, choice, reader)
 		if signal == "OK" {
-			fmt.Println("\t\t\t\t欢迎进入聊天室\t\t")
+			fmt.Println("\t\t\t\t\t\t\t\t\t\t\t\t欢迎进入udp聊天室\t\t")
 			chatMessage(conn, name, address, reader)
 			break
 		} else if signal == "Error_UserExist" {
-			fmt.Println("User already exists!")
+			fmt.Println("用户已经被注册!")
 		} else if signal == "Error_PasswordError" {
-			fmt.Println("Password error!")
+			fmt.Println("账号或密码错误")
 		} else if signal == "Error_UserNotExist" {
-			fmt.Println("User does not exist!")
+			fmt.Println("用户不存在")
 		}
 	}
 }
@@ -74,9 +70,10 @@ func personMessage(conn net.Conn, choice int, reader *bufio.Reader) (string, str
 }
 
 func chatMessage(conn net.Conn, name, address string, reader *bufio.Reader) {
-	fmt.Println("请输入聊天信息:")
-	fmt.Println("(input \033[1;44mExit\033[0m to quit the room,")
-	fmt.Println("input \033[1;44ms/name/message\033[0m for private chat)")
+	fmt.Println("     [Exit]:     退出聊天室")
+	fmt.Println("[s/name/message]:私聊")
+	fmt.Print("请输入信息:")
+	fmt.Print("\t\t\t\t\t\t\t\t\t\t\t 历史消息\n")
 
 	go receiveMessages(conn)
 
@@ -120,6 +117,6 @@ func receiveMessages(conn net.Conn) {
 			os.Exit(0)
 		}
 
-		fmt.Print("\t\t\t\t\t\t" + message + "\n请输入聊天信息:\n")
+		fmt.Print("\t\t\t\t\t\t\t\t\t\t\t\t" + message + "\n请输入信息:\n")
 	}
 }

@@ -117,6 +117,8 @@ func receiveMessages(conn net.Conn) {
 			os.Exit(0)
 		}
 
-		fmt.Print("\t\t\t\t\t\t\t\t\t\t\t\t" + message + "\n请输入信息:\n")
+		//fmt.Print("\t\t\t\t\t\t\t\t\t\t\t\t" + message + "\n请输入信息:\n")
+		fmt.Print("\t\t\t\t\t\t\t\t\t\t\t\t" + message)
+		fmt.Println()
 	}
 }
